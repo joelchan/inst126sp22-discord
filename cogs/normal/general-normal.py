@@ -6,9 +6,12 @@ This is a template to create your own discord bot in python.
 Version: 4.1
 """
 
+from exceptions import *
+from typing import TypeVar, Callable
 import json
 import os
 import platform
+from pydoc import describe
 import random
 import sys
 
@@ -17,7 +20,7 @@ import disnake
 from disnake.ext import commands
 from disnake.ext.commands import Context
 
-from helpers import checks
+import helpers.checks as checks
 
 if not os.path.isfile("config.json"):
     sys.exit("'config.json' not found! Please add it and try again.")
@@ -49,7 +52,7 @@ class General(commands.Cog, name="general-normal"):
         )
         embed.add_field(
             name="Owner:",
-            value="Krypton#7331",
+            value="INST126 Dev Team",
             inline=True
         )
         embed.add_field(
@@ -171,59 +174,33 @@ class General(commands.Cog, name="general-normal"):
             await context.send(embed=embed)
 
     @commands.command(
-        name="8ball",
-        description="Ask any question to the bot.",
+        name="error",
+        description="Tell the bot about an error you are encountering and it'll try to help"
     )
     @checks.not_blacklisted()
-    async def eight_ball(self, context: Context, *, question: str) -> None:
-        """
-        Ask any question to the bot.
-        :param context: The context in which the command has been executed.
-        :param question: The question that should be asked by the user.
-        """
-        answers = ["It is certain.", "It is decidedly so.", "You may rely on it.", "Without a doubt.",
-                   "Yes - definitely.", "As I see, yes.", "Most likely.", "Outlook good.", "Yes.",
-                   "Signs point to yes.", "Reply hazy, try again.", "Ask again later.", "Better not tell you now.",
-                   "Cannot predict now.", "Concentrate and ask again later.", "Don't count on it.", "My reply is no.",
-                   "My sources say no.", "Outlook not so good.", "Very doubtful."]
-        embed = disnake.Embed(
-            title="**My Answer:**",
-            description=f"{random.choice(answers)}",
-            color=0x9C84EF
-        )
-        embed.set_footer(
-            text=f"The question was: {question}"
-        )
-        await context.send(embed=embed)
+    async def error_help(self, context: Context) -> None:
 
-    @commands.command(
-        name="bitcoin",
-        description="Get the current price of bitcoin.",
-    )
-    @checks.not_blacklisted()
-    async def bitcoin(self, context: Context) -> None:
-        """
-        Get the current price of bitcoin.
-        :param context: The context in which the command has been executed.
-        """
-        # This will prevent your bot from stopping everything when doing a web request - see: https://discordpy.readthedocs.io/en/stable/faq.html#how-do-i-make-a-web-request
-        async with aiohttp.ClientSession() as session:
-            async with session.get("https://api.coindesk.com/v1/bpi/currentprice/BTC.json") as request:
-                if request.status == 200:
-                    data = await request.json(
-                        content_type="application/javascript")  # For some reason the returned content is of type JavaScript
-                    embed = disnake.Embed(
-                        title="Bitcoin price",
-                        description=f"The current price is {data['bpi']['USD']['rate']} :dollar:",
-                        color=0x9C84EF
-                    )
-                else:
-                    embed = disnake.Embed(
-                        title="Error!",
-                        description="There is something wrong with the API, please try again later",
-                        color=0xE02B2B
-                    )
-                await context.send(embed=embed)
+        # List of all python error types
+        errors = ['Exception', 'AssertionError', 'AttributeError', 'EOFError', 'FloatingPointError', 'GeneratorExit', 'ImportError', 'IndexError', 'KeyError', 'KeyboardInterrupt', 'MemoryError', 'NameError', 'NotImplementedError', 'OSError', 'OverflowError', 'ReferenceError',
+                  'RuntimeError', 'StopIteration', 'SyntaxError', 'IndentationError', 'TabError', 'SystemError', 'SystemExit', 'TypeError', 'UnboundLocalError', 'UnicodeError', 'UnicodeEncodeError', 'UnicodeDecodeError', 'UnicodeTranslateError', 'ValueError', 'ZeroDivisionError']
+
+        # Respond once error command is triggered
+        await context.send(f'Hey {context.author.name}, what error are you encountering? Or Type help to get list of errors')
+
+        # Wait for a message from the user who triggered the bot for 60 seconds
+        msg = await context.bot.wait_for("message", check=lambda message: message.author == context.author, timeout=60.0)
+
+        # This is where we'll handle all the logic for determining what the user needs help with
+        if msg.content.lower() == "help":  # Show a list of all errors the user can get help with
+            embed = disnake.Embed(
+                title="**List of Errors:**",
+                description=f"\n".join("**{}**".format(k) for k in errors),
+                color=0x9C84EF
+            )
+
+            embed.footer = "Just type any of these errors and I'll help"
+
+            await context.send(embed=embed)
 
 
 def setup(bot):
