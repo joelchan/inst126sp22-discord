@@ -6,6 +6,7 @@ This is a template to create your own discord bot in python.
 Version: 4.1
 """
 
+from tokenize import String
 from exceptions import *
 from typing import TypeVar, Callable
 import json
@@ -14,6 +15,7 @@ import platform
 from pydoc import describe
 import random
 import sys
+from Classes.errortype import errors
 
 import aiohttp
 import disnake
@@ -180,25 +182,28 @@ class General(commands.Cog, name="general-normal"):
     @checks.not_blacklisted()
     async def error_help(self, context: Context) -> None:
 
-        # List of all python error types
-        errors = ['Exception', 'AssertionError', 'AttributeError', 'EOFError', 'FloatingPointError', 'GeneratorExit', 'ImportError', 'IndexError', 'KeyError', 'KeyboardInterrupt', 'MemoryError', 'NameError', 'NotImplementedError', 'OSError', 'OverflowError', 'ReferenceError',
-                  'RuntimeError', 'StopIteration', 'SyntaxError', 'IndentationError', 'TabError', 'SystemError', 'SystemExit', 'TypeError', 'UnboundLocalError', 'UnicodeError', 'UnicodeEncodeError', 'UnicodeDecodeError', 'UnicodeTranslateError', 'ValueError', 'ZeroDivisionError']
-
         # Respond once error command is triggered
         await context.send(f'Hey {context.author.name}, what error are you encountering? Or Type help to get list of errors')
 
-        # Wait for a message from the user who triggered the bot for 60 seconds
-        msg = await context.bot.wait_for("message", check=lambda message: message.author == context.author, timeout=60.0)
+        should_listen = True
+        while should_listen:
 
-        # This is where we'll handle all the logic for determining what the user needs help with
-        if msg.content.lower() == "help":  # Show a list of all errors the user can get help with
-            embed = disnake.Embed(
-                title="**List of Errors:**",
-                description=f"\n".join("**{}**".format(k) for k in errors),
-                color=0x9C84EF
-            )
+            # Wait for a message from the user who triggered the bot for 60 seconds
+            msg = await context.bot.wait_for("message", check=lambda message: message.author == context.author, timeout=60.0)
+            embed = disnake.Embed()
+            
+             # This is where we'll handle all the logic for determining what the user needs help with
+            if msg.content.lower() == "help":  # Show a list of all errors the user can get help with
+                embed.title = "**List of Errors:**"
+                embed.description = f"\n".join("**{}**".format(k.name) for k in errors)
+                embed.set_footer(text="Just type any of these errors and I'll help")
+                embed.color = 0x9C84EF
 
-            embed.footer = "Just type any of these errors and I'll help"
+            elif msg.content.lower() in list(map(lambda error: error.name.lower(), errors)):
+                chosen_error = list(filter(lambda error: error.name.lower() == msg.content.lower(), errors))[0]
+                embed.title = chosen_error.name
+                embed.description = chosen_error.description
+                should_listen = False
 
             await context.send(embed=embed)
 
