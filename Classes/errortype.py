@@ -1,8 +1,17 @@
+from os import path
 class ErrorType:
 
     def __init__(self, name, description):
         self.name = name
         self.description = description
+        self.image = self.getImage()
+
+    def getImage(self):
+        file = f'assets/{self.name}.png'
+        if path.exists(file):
+            return file
+        else:
+            return None
 
 
 errors = set([ErrorType('AssertionError', 'Raised when the assert statement fails.'),

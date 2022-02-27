@@ -200,10 +200,16 @@ class General(commands.Cog, name="general-normal"):
                 embed.color = 0x9C84EF
 
             elif msg.content.lower() in list(map(lambda error: error.name.lower(), errors)):
+                should_listen = False
                 chosen_error = list(filter(lambda error: error.name.lower() == msg.content.lower(), errors))[0]
                 embed.title = chosen_error.name
                 embed.description = chosen_error.description
-                should_listen = False
+                if chosen_error.image:
+                    embed.add_field(name="Example:", value="Check it out!", inline=False)
+                    embed.set_image(file=disnake.File(chosen_error.image))
+            else:
+                embed.title = "**Hmmmmmm**"
+                embed.description = "That doesn't appear to be an error. Type help to get list of errors"
 
             await context.send(embed=embed)
 
