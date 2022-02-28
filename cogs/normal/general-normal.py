@@ -6,6 +6,7 @@ This is a template to create your own discord bot in python.
 Version: 4.1
 """
 
+import asyncio
 from tokenize import String
 from exceptions import *
 from typing import TypeVar, Callable
@@ -183,34 +184,47 @@ class General(commands.Cog, name="general-normal"):
     async def error_help(self, context: Context) -> None:
 
         # Respond once error command is triggered
-        await context.send(f'Hey {context.author.name}, what error are you encountering? Or Type help to get list of errors')
 
-        should_listen = True
-        while should_listen:
+        embed = disnake.Embed()
 
-            # Wait for a message from the user who triggered the bot for 60 seconds
-            msg = await context.bot.wait_for("message", check=lambda message: message.author == context.author, timeout=60.0)
-            embed = disnake.Embed()
-            
-             # This is where we'll handle all the logic for determining what the user needs help with
-            if msg.content.lower() == "help":  # Show a list of all errors the user can get help with
-                embed.title = "**List of Errors:**"
-                embed.description = f"\n".join("**{}**".format(k.name) for k in errors)
-                embed.set_footer(text="Just type any of these errors and I'll help")
-                embed.color = 0x9C84EF
+        try:
+            await context.send(f'Hey {context.author.name}, what error are you encountering? Or Type help to get list of errors')
 
-            elif msg.content.lower() in list(map(lambda error: error.name.lower(), errors)):
-                should_listen = False
-                chosen_error = list(filter(lambda error: error.name.lower() == msg.content.lower(), errors))[0]
-                embed.title = chosen_error.name
-                embed.description = chosen_error.description
-                if chosen_error.image:
-                    embed.add_field(name="Example:", value="Check it out!", inline=False)
-                    embed.set_image(file=disnake.File(chosen_error.image))
-            else:
-                embed.title = "**Hmmmmmm**"
-                embed.description = "That doesn't appear to be an error. Type help to get list of errors"
+            should_listen = True
+            while should_listen:
 
+                # Wait for a message from the user who triggered the bot for 60 seconds
+                msg = await context.bot.wait_for("message", check=lambda message: message.author == context.author, timeout=30.0)
+
+                # This is where we'll handle all the logic for determining what the user needs help with
+                if msg.content.lower() == "help":  # Show a list of all errors the user can get help with
+                    embed.title = "**List of Errors:**"
+                    embed.description = f"\n".join(
+                        "**{}**".format(k.name) for k in errors)
+                    embed.set_footer(
+                        text="Just type any of these errors and I'll help")
+                    embed.color = 0x9C84EF
+
+                elif msg.content.lower() in list(map(lambda error: error.name.lower(), errors)):
+                    should_listen = False
+                    chosen_error = list(
+                        filter(lambda error: error.name.lower() == msg.content.lower(), errors))[0]
+                    embed.title = chosen_error.name
+                    embed.description = chosen_error.description
+                    if chosen_error.image:
+                        embed.add_field(name="Example:",
+                                        value="Check it out!", inline=False)
+                        embed.set_image(file=disnake.File(chosen_error.image))
+                else:
+                    embed.title = "**Hmmmmmm**"
+                    embed.description = "That doesn't appear to be an error. Type help to get list of errors"
+
+                await context.send(embed=embed)
+
+        except asyncio.TimeoutError:
+            embed.title = "**Oops!**"
+            embed.description = "Looks like you didn't respond. Just call me if you need me again."
+            should_listen = False
             await context.send(embed=embed)
 
 
