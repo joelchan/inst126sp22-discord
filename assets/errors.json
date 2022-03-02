@@ -1,0 +1,124 @@
+{
+  "errors": [
+    {
+      "name": "UnicodeError",
+      "description": "Raised when a Unicode-related encoding or decoding error occurs."
+    },
+    {
+      "name": "UnicodeEncodeError",
+      "description": "Raised when a Unicode-related error occurs during encoding."
+    },
+    {
+      "name": "UnicodeDecodeError",
+      "description": "Raised when a Unicode-related error occurs during decoding."
+    },
+    {
+      "name": "UnicodeTranslateError",
+      "description": "Raised when a Unicode-related error occurs during translation."
+    },
+    {
+      "name": "ValueError",
+      "description": "Raised when a function gets an argument of correct type but improper value."
+    },
+    {
+      "name": "EOFError",
+      "description": "Raised when the input() function hits the end-of-file condition."
+    },
+    {
+      "name": "ZeroDivisionError",
+      "description": "Raised when the second operand of a division or module operation is zero."
+    },
+    {
+      "name": "FloatingPointError",
+      "description": "Raised when a floating point operation fails."
+    },
+    {
+      "name": "ImportError",
+      "description": "Raised when the imported module is not found."
+    },
+    {
+      "name": "OverflowError",
+      "description": "Raised when the result of an arithmetic operation is too large to be represented."
+    },
+    {
+      "name": "ReferenceError",
+      "description": "Raised when a weak reference proxy is used to access a garbage collected referent."
+    },
+    {
+      "name": "KeyError",
+      "description": "Raised when a key is not found in a dictionary."
+    },
+    {
+      "name": "RuntimeError",
+      "description": "Raised when an error does not fall under any other category."
+    },
+    {
+      "name": "MemoryError",
+      "description": "Raised when an operation runs out of memory."
+    },
+    {
+      "name": "GeneratorExit",
+      "description": "Raised when a generators close() method is called."
+    },
+    {
+      "name": "KeyboardInterrupt",
+      "description": "Raised when the user hits the interrupt key(Ctrl+c or delete)."
+    },
+    {
+      "name": "OSError",
+      "description": "Raised when a system operation causes a system-related error."
+    },
+    {
+      "name": "NotImplementedError",
+      "description": "Raised by abstract methods."
+    },
+    {
+      "name": "StopIteration",
+      "description": "Raised by the next() function to indicate that there is no further item to be returned by the iterator."
+    },
+    {
+      "name": "NameError",
+      "description": "Raised when a variable is not found in the local or global scope."
+    },
+    {
+      "name": "SyntaxError",
+      "description": "Raised by the parser when a syntax error is encountered."
+    },
+    {
+      "name": "IndentationError",
+      "description": "Raised when there is an incorrect indentation."
+    },
+    {
+      "name": "IndexError",
+      "description": "Raised when the index of a sequence is out of range."
+    },
+    {
+      "name": "TabError",
+      "description": "Raised when the indentation consists of inconsistent tabs and spaces."
+    },
+    {
+      "name": "SystemError",
+      "description": "Raised when the interpreter detects internal error."
+    },
+    {
+      "name": "AttributeError",
+      "description": "Raised on the attribute assignment or reference fails."
+    },
+    {
+      "name": "SystemExit",
+      "description": "Raised by the sys.exit() function."
+    },
+    {
+      "name": "TypeError",
+      "description": "Raised when a function or operation is applied to an object of an incorrect type."
+    },
+    {
+      "name": "UnboundLocalError",
+      "description": "Raised when a reference is made to a local variable in a function or method, but no value has been bound to that variable."
+    },
+    {
+      "name": "AssertionError",
+      "description": "Raised when the assert statement fails."
+    }
+  ]
+}

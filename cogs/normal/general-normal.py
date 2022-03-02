@@ -184,12 +184,10 @@ class General(commands.Cog, name="general-normal"):
     async def error_help(self, context: Context) -> None:
 
         # Respond once error command is triggered
-
         embed = disnake.Embed()
 
         try:
             await context.send(f'Hey {context.author.name}, what error are you encountering? Or Type help to get list of errors')
-
             should_listen = True
             while should_listen:
 
